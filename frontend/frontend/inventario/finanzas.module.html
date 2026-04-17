@@ -1,0 +1,231 @@
+<main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+    <header class="bg-header-bg text-white p-8 shadow-md">
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-4xl font-black uppercase tracking-[0.2em] text-primary">Finanzas</h1>
+            <div class="text-right">
+                <p id="fin-date" class="text-primary font-medium capitalize">Cargando fecha...</p>
+                <p id="fin-time" class="text-3xl font-bold">--:--</p>
+            </div>
+        </div>
+    </header>
+
+    <div class="p-8 space-y-8 max-w-7xl mx-auto w-full">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">Ingresos Totales</span>
+                    <span class="material-icons text-green-500">trending_up</span>
+                </div>
+                <p class="text-3xl font-bold text-slate-900 dark:text-white">$45,280.00</p>
+                <p class="text-xs text-green-600 font-medium mt-1">+12% vs mes pasado</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">Gastos Totales</span>
+                    <span class="material-icons text-red-500">trending_down</span>
+                </div>
+                <p class="text-3xl font-bold text-slate-900 dark:text-white">$12,450.00</p>
+                <p class="text-xs text-red-600 font-medium mt-1">+4% vs mes pasado</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">Balance Neto</span>
+                    <span class="material-icons text-blue-500">account_balance_wallet</span>
+                </div>
+                <p class="text-3xl font-bold text-slate-900 dark:text-white">$32,830.00</p>
+                <p class="text-xs text-slate-500 font-medium mt-1">Rentabilidad: 72%</p>
+            </div>
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-slate-500 uppercase">Ventas Hoy</span>
+                    <span class="material-icons text-primary">today</span>
+                </div>
+                <p class="text-3xl font-bold text-slate-900 dark:text-white">$3,120.00</p>
+                <p class="text-xs text-slate-500 font-medium mt-1">24 transacciones</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 h-[400px] flex flex-col">
+                <div class="flex justify-between items-center mb-6">
+                    <h3 class="font-bold text-lg">Histórico de Ventas</h3>
+                    <div class="flex gap-2">
+                        <button onclick="window.finCambiarVista(this, '7D')" class="fin-btn-filtro px-3 py-1 text-xs font-semibold rounded bg-primary text-slate-900 transition-colors">7D</button>
+                        <button onclick="window.finCambiarVista(this, '30D')" class="fin-btn-filtro px-3 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors">30D</button>
+                    </div>
+                </div>
+                
+                <div class="flex-1 flex items-end justify-between gap-4 px-2 pb-2">
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 60%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Lun</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 85%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Mar</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 45%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Mie</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 90%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Jue</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 75%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Vie</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 100%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Sab</span>
+                    </div>
+                    <div class="w-full bg-blue-100 dark:bg-blue-900/20 rounded-t-lg relative group h-[40%]">
+                        <div class="fin-barra absolute inset-0 bg-blue-500 rounded-t-lg transition-all duration-500" style="height: 30%"></div>
+                        <span class="absolute -bottom-6 left-1/2 -translate-x-1/2 text-[10px] text-slate-400">Dom</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <h3 class="font-bold text-lg mb-6">Resumen de Gastos</h3>
+                <div class="space-y-6 flex-1 flex flex-col justify-center">
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Inventario</span>
+                            <span class="text-sm font-medium">65%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5">
+                            <div class="bg-blue-600 h-2.5 rounded-full" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Servicios</span>
+                            <span class="text-sm font-medium">20%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5">
+                            <div class="bg-yellow-500 h-2.5 rounded-full" style="width: 20%"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between mb-1">
+                            <span class="text-sm font-medium">Otros</span>
+                            <span class="text-sm font-medium">15%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-700 rounded-full h-2.5">
+                            <div class="bg-slate-400 h-2.5 rounded-full" style="width: 15%"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+            <div class="p-6 border-b border-slate-200 dark:border-slate-700 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <h3 class="font-bold text-lg">Movimientos Recientes</h3>
+                <div class="flex gap-3">
+                    <button onclick="window.finExportar('PDF')" class="flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-sm font-medium transition-colors">
+                        <span class="material-icons text-base mr-2">description</span> Exportar PDF
+                    </button>
+                    <button onclick="window.finExportar('CSV')" class="flex items-center px-4 py-2 bg-slate-100 dark:bg-slate-700 hover:bg-slate-200 dark:hover:bg-slate-600 rounded text-sm font-medium transition-colors">
+                        <span class="material-icons text-base mr-2">table_view</span> Exportar CSV
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 uppercase text-xs font-bold">
+                            <th class="px-6 py-4">Fecha</th>
+                            <th class="px-6 py-4">Concepto</th>
+                            <th class="px-6 py-4">Tipo</th>
+                            <th class="px-6 py-4">Categoría</th>
+                            <th class="px-6 py-4 text-right">Monto</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 text-sm">03/02/2026</td>
+                            <td class="px-6 py-4 text-sm font-medium">Venta de Productos #4452</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-[10px] font-bold uppercase tracking-wider">Ingreso</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">Ventas</td>
+                            <td class="px-6 py-4 text-sm font-bold text-right text-green-600">+$150.00</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 text-sm">03/02/2026</td>
+                            <td class="px-6 py-4 text-sm font-medium">Pago a Proveedor: Coca Cola</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-[10px] font-bold uppercase tracking-wider">Gasto</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">Inventario</td>
+                            <td class="px-6 py-4 text-sm font-bold text-right text-red-600">-$2,400.00</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 text-sm">02/02/2026</td>
+                            <td class="px-6 py-4 text-sm font-medium">Venta de Productos #4451</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-[10px] font-bold uppercase tracking-wider">Ingreso</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">Ventas</td>
+                            <td class="px-6 py-4 text-sm font-bold text-right text-green-600">+$85.50</td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 text-sm">01/02/2026</td>
+                            <td class="px-6 py-4 text-sm font-medium">Pago de Luz Local</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 rounded-full text-[10px] font-bold uppercase tracking-wider">Gasto</span>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-slate-500">Servicios</td>
+                            <td class="px-6 py-4 text-sm font-bold text-right text-red-600">-$1,200.00</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-6 bg-slate-50 dark:bg-slate-900/50 flex justify-center">
+                <button onclick="alert('Abriendo registro completo de movimientos...')" class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">Ver todos los movimientos</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-auto p-8 text-center text-slate-400 text-sm">
+        © 2026 Smart Inventory System - Panel de Control Financiero
+    </footer>
+
+    <img src="dummy" onerror="
+        (function() {
+            // Reloj en tiempo real
+            setInterval(() => {
+                let d = new Date();
+                let dateEl = document.getElementById('fin-date');
+                let timeEl = document.getElementById('fin-time');
+                if(dateEl) dateEl.innerText = d.toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+                if(timeEl) timeEl.innerText = d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            }, 1000);
+
+            // Exportar Documentos
+            window.finExportar = function(tipo) {
+                alert(`Generando reporte financiero en formato ${tipo}...\n\nLa descarga comenzará en breve.`);
+            };
+
+            // Cambiar vista de gráfica (Simulación visual)
+            window.finCambiarVista = function(btnActivo, rango) {
+                // Estilar botones
+                document.querySelectorAll('.fin-btn-filtro').forEach(btn => {
+                    btn.className = 'fin-btn-filtro px-3 py-1 text-xs font-semibold rounded bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 transition-colors';
+                });
+                btnActivo.className = 'fin-btn-filtro px-3 py-1 text-xs font-semibold rounded bg-primary text-slate-900 transition-colors';
+
+                // Animar barras al azar
+                document.querySelectorAll('.fin-barra').forEach(barra => {
+                    let randomHeight = Math.floor(Math.random() * 80) + 20; // Entre 20% y 100%
+                    barra.style.height = `${randomHeight}%`;
+                });
+            };
+
+        })();
+        this.remove();
+    " style="display:none;">
+</main>

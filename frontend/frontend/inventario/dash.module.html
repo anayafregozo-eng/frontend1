@@ -1,0 +1,247 @@
+<main class="flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+    <header class="bg-slate-800 dark:bg-black text-white p-6 shadow-lg">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h1 class="text-3xl font-bold tracking-tight text-primary">DASHBOARD</h1>
+                <p id="dash-date" class="text-slate-400 text-sm mt-1 uppercase tracking-widest font-medium capitalize">
+                    Cargando fecha...
+                </p>
+            </div>
+
+            <div class="flex items-center space-x-6">
+                <div class="text-right">
+                    <span id="dash-time" class="block text-2xl font-mono text-primary">--:--</span>
+                    <span class="text-xs text-slate-400 uppercase">Hora Actual</span>
+                </div>
+                <button onclick="window.dashNotificaciones()" class="relative p-2 rounded-full hover:bg-slate-700 transition-colors">
+                    <span class="material-icons-round">notifications</span>
+                    <span class="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-slate-800"></span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div class="p-6 md:p-8 space-y-8 max-w-7xl mx-auto w-full">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 rounded-xl">
+                        <span class="material-icons-round">point_of_sale</span>
+                    </div>
+                    <span class="text-xs font-bold text-green-600 bg-green-100 dark:bg-green-900/30 px-2 py-1 rounded-full">+12%</span>
+                </div>
+                <span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Ventas del día</span>
+                <span class="text-2xl font-bold mt-1">$ 12,450.00</span>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-yellow-100 dark:bg-yellow-900/40 text-yellow-600 rounded-xl">
+                        <span class="material-icons-round">low_priority</span>
+                    </div>
+                </div>
+                <span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Productos bajos</span>
+                <span class="text-2xl font-bold mt-1 text-yellow-600">24 items</span>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-red-100 dark:bg-red-900/40 text-red-600 rounded-xl">
+                        <span class="material-icons-round">error_outline</span>
+                    </div>
+                </div>
+                <span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Alertas</span>
+                <span class="text-2xl font-bold mt-1 text-red-600">3</span>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="p-3 bg-purple-100 dark:bg-purple-900/40 text-purple-600 dark:text-purple-400 rounded-xl">
+                        <span class="material-icons-round">inventory</span>
+                    </div>
+                </div>
+                <span class="text-slate-500 dark:text-slate-400 text-sm font-medium">Merma detectada</span>
+                <span class="text-2xl font-bold mt-1">$ 430.20</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col">
+                <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                    <h2 class="text-xl font-bold flex items-center space-x-2">
+                        <span class="material-icons-round text-slate-400">traffic</span>
+                        <span>Estado de Inventario</span>
+                    </h2>
+                    <button onclick="window.location.hash='#productos'" class="text-blue-500 text-sm font-semibold hover:underline">Ver todo</button>
+                </div>
+
+                <div class="p-6">
+                    <div class="space-y-4">
+                        <div class="flex items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border-l-4 border-green-500 transition-transform hover:translate-x-1 cursor-pointer" onclick="window.location.hash='#productos'">
+                            <div class="flex-1">
+                                <h4 class="font-bold">Coca Cola 600ml</h4>
+                                <p class="text-xs text-slate-500">Stock actual: 120 unidades</p>
+                            </div>
+                            <span class="inline-block w-3 h-3 rounded-full bg-green-500"></span>
+                        </div>
+
+                        <div class="flex items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border-l-4 border-orange-400 transition-transform hover:translate-x-1 cursor-pointer" onclick="window.location.hash='#productos'">
+                            <div class="flex-1">
+                                <h4 class="font-bold">Fanta de Naranja 600ml</h4>
+                                <p class="text-xs text-slate-500">Stock actual: 15 unidades</p>
+                            </div>
+                            <span class="inline-block w-3 h-3 rounded-full bg-orange-400"></span>
+                        </div>
+
+                        <div class="flex items-center p-4 rounded-xl bg-slate-50 dark:bg-slate-900/50 border-l-4 border-red-500 transition-transform hover:translate-x-1 cursor-pointer" onclick="window.location.hash='#productos'">
+                            <div class="flex-1">
+                                <h4 class="font-bold">Agua Purificada 1L</h4>
+                                <p class="text-xs text-slate-500">Stock actual: 2 unidades</p>
+                            </div>
+                            <span class="inline-block w-3 h-3 rounded-full bg-red-500 animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-indigo-600 dark:bg-indigo-900 text-white rounded-2xl shadow-xl p-8 flex flex-col relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 opacity-10">
+                    <span class="material-icons-round text-[200px]">auto_awesome</span>
+                </div>
+
+                <div class="relative z-10 flex flex-col h-full">
+                    <div class="flex items-center space-x-2 mb-6">
+                        <span class="material-icons-round text-primary">auto_awesome</span>
+                        <h2 class="text-xl font-bold">IA: Sugerencias</h2>
+                    </div>
+
+                    <p class="text-indigo-100 text-sm mb-6 leading-relaxed">
+                        Detectamos baja rotación en los siguientes productos. Se recomienda aplicar promoción o cambio de ubicación.
+                    </p>
+
+                    <div class="space-y-4 mb-8 flex-1">
+                        <div class="flex items-start space-x-3 bg-white/10 p-3 rounded-xl border border-white/5">
+                            <span class="material-icons-round text-primary text-sm mt-1">trending_down</span>
+                            <div>
+                                <span class="text-sm font-bold block">Galletas de Coco</span>
+                                <span class="text-xs text-indigo-200">Sin ventas en los últimos 15 días.</span>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start space-x-3 bg-white/10 p-3 rounded-xl border border-white/5">
+                            <span class="material-icons-round text-primary text-sm mt-1">info</span>
+                            <div>
+                                <span class="text-sm font-bold block">Refresco de Uva 2L</span>
+                                <span class="text-xs text-indigo-200">Próximo a caducar el 15/03.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button onclick="window.dashAplicarEstrategia(this)" class="bg-primary text-slate-900 font-bold py-3 px-6 rounded-xl hover:shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2">
+                        Aplicar Estrategia
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden mb-8">
+            <div class="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between">
+                <h2 class="text-xl font-bold">Últimas Operaciones</h2>
+                <div class="flex space-x-2">
+                    <span class="inline-flex items-center rounded-md bg-slate-100 dark:bg-slate-900 px-2 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 ring-1 ring-inset ring-slate-500/10">
+                        Hoy
+                    </span>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm">
+                    <thead class="bg-slate-50 dark:bg-slate-900 text-slate-500 uppercase font-bold text-xs tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">ID Transacción</th>
+                            <th class="px-6 py-4">Usuario</th>
+                            <th class="px-6 py-4">Tipo</th>
+                            <th class="px-6 py-4">Monto</th>
+                            <th class="px-6 py-4">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-mono text-blue-600 dark:text-blue-400 font-medium">#VNT-02394</td>
+                            <td class="px-6 py-4 font-semibold">Carlos Empleado</td>
+                            <td class="px-6 py-4">Venta Directa</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">$ 150.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">
+                                    Completado
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-mono text-blue-600 dark:text-blue-400 font-medium">#CMP-00482</td>
+                            <td class="px-6 py-4 font-semibold">Admin</td>
+                            <td class="px-6 py-4">Compra Proveedor</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">$ 3,200.00</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-xs font-bold">
+                                    Pendiente
+                                </span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                            <td class="px-6 py-4 font-mono text-blue-600 dark:text-blue-400 font-medium">#VNT-02393</td>
+                            <td class="px-6 py-4 font-semibold">Marco Empleado</td>
+                            <td class="px-6 py-4">Venta Directa</td>
+                            <td class="px-6 py-4 font-bold text-slate-900 dark:text-white">$ 85.50</td>
+                            <td class="px-6 py-4">
+                                <span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-xs font-bold">
+                                    Completado
+                                </span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="p-4 bg-slate-50 dark:bg-slate-900/50 text-center border-t border-slate-100 dark:border-slate-700">
+                <button onclick="window.location.hash='#finanzas'" class="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline">Ver registro completo en Finanzas</button>
+            </div>
+        </div>
+
+    </div>
+
+    <img src="dummy" onerror="
+        (function() {
+            // Reloj en tiempo real
+            setInterval(() => {
+                let d = new Date();
+                let dateEl = document.getElementById('dash-date');
+                let timeEl = document.getElementById('dash-time');
+                if(dateEl) dateEl.innerText = d.toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+                if(timeEl) timeEl.innerText = d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            }, 1000);
+
+            // Botón Notificaciones
+            window.dashNotificaciones = function() {
+                alert('Tus Notificaciones:\n\n- [Alerta] Stock crítico en Fanta de Naranja (2 unidades).\n- [Alerta] Apertura de bodega inusual registrada.\n- [Info] Entrega de Coca Cola programada para mañana.');
+                window.location.hash = '#alertas'; // Redirige al módulo de alertas
+            };
+
+            // Botón IA: Aplicar Estrategia
+            window.dashAplicarEstrategia = function(btn) {
+                let originalText = btn.innerHTML;
+                btn.innerHTML = '<span class=\'material-icons-round animate-spin text-sm\'>refresh</span> Aplicando...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    alert('Estrategia IA Aplicada:\n\n1. Etiqueta promocional generada para Galletas de Coco (-15%).\n2. Alerta de reubicación enviada a terminal de piso para Refresco de Uva 2L.');
+                    btn.innerHTML = '<span class=\'material-icons-round text-sm\'>check_circle</span> Estrategia Activa';
+                    btn.classList.replace('bg-primary', 'bg-green-500');
+                    btn.classList.replace('text-slate-900', 'text-white');
+                }, 1500);
+            };
+
+        })();
+        this.remove();
+    " style="display:none;">
+</main>

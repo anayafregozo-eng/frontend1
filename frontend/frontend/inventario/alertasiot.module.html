@@ -1,0 +1,255 @@
+<main class="flex-1 flex flex-col min-h-full overflow-hidden">
+    <header class="bg-[#4a4e61] dark:bg-slate-900 p-8 relative">
+        <h1 class="text-primary text-6xl font-black text-center tracking-wider uppercase">Alertas &amp; IoT</h1>
+        <div class="flex justify-between items-end mt-4 text-primary font-medium">
+            <p class="text-lg capitalize" id="iot-date">Cargando fecha...</p>
+            <p class="text-3xl" id="iot-time">--:--</p>
+        </div>
+    </header>
+
+    <div class="flex-1 p-8 overflow-y-auto bg-background-light dark:bg-background-dark custom-scrollbar">
+        <div class="max-w-7xl mx-auto space-y-8">
+            <section>
+                <div class="flex items-center justify-between mb-4 border-b-2 border-slate-200 dark:border-slate-700 pb-2">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        <span class="material-icons text-primary">warning</span>
+                        Alertas del Sistema
+                    </h2>
+                    <span class="px-3 py-1 bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm font-bold rounded-full">3 Prioritarias</span>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border-l-8 border-red-500 shadow-sm p-6 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-red-100 dark:bg-red-900/40 rounded-lg">
+                                <span class="material-icons text-red-600 dark:text-red-400">trending_down</span>
+                            </div>
+                            <span class="text-xs font-bold text-red-600 uppercase tracking-widest">Crítico</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Stock Muy Bajo</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Fanta de Naranja 600ml está por debajo del mínimo (2 unidades restantes).</p>
+                        <button onclick="window.iotGenerarPedido(this)" class="w-full bg-primary text-slate-900 font-bold py-2 rounded shadow-sm hover:brightness-105 transition-all">Generar Pedido</button>
+                    </div>
+
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border-l-8 border-yellow-500 shadow-sm p-6 hover:shadow-md transition-shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-yellow-100 dark:bg-yellow-900/40 rounded-lg">
+                                <span class="material-icons text-yellow-600 dark:text-yellow-400">visibility</span>
+                            </div>
+                            <span class="text-xs font-bold text-yellow-600 uppercase tracking-widest">Advertencia</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Movimiento Inusual</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">Se detectó apertura de bodega fuera del horario laboral (21:30).</p>
+                        <button onclick="window.iotVerCamaras()" class="w-full bg-accent-purple text-slate-700 font-bold py-2 rounded hover:bg-slate-300 transition-all">Ver Cámaras</button>
+                    </div>
+
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl border-l-8 border-blue-500 shadow-sm p-6 hover:shadow-md transition-shadow opacity-80">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-2 bg-blue-100 dark:bg-blue-900/40 rounded-lg">
+                                <span class="material-icons text-blue-600 dark:text-blue-400">local_shipping</span>
+                            </div>
+                            <span class="text-xs font-bold text-blue-600 uppercase tracking-widest">Info</span>
+                        </div>
+                        <h3 class="text-xl font-bold mb-1">Entrega Pendiente</h3>
+                        <p class="text-slate-500 dark:text-slate-400 text-sm mb-4">El proveedor 'Coca Cola' llegará mañana antes de las 10:00 AM.</p>
+                        <!-- <button onclick="alert('Esta es una notificación informativa automática. No requiere acción.')" class="w-full bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300 font-bold py-2 rounded cursor-not-allowed">Detalles</button>  !-->
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <div class="flex items-center justify-between mb-4 border-b-2 border-slate-200 dark:border-slate-700 pb-2">
+                    <h2 class="text-2xl font-bold flex items-center gap-2">
+                        <span class="material-icons text-primary">settings_input_component</span>
+                        Monitoreo IoT (Sensores de Peso)
+                    </h2>
+                    <div class="flex items-center gap-2">
+                        <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-medium text-green-600">Sistema Online</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+                    <div class="bg-surface-light dark:bg-surface-dark rounded-xl shadow-sm overflow-hidden border border-slate-200 dark:border-slate-700">
+                        <table class="w-full text-left border-collapse">
+                            <thead class="bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700">
+                                <tr>
+                                    <th class="p-4 font-bold text-sm uppercase">Sensor ID</th>
+                                    <th class="p-4 font-bold text-sm uppercase">Producto</th>
+                                    <th class="p-4 font-bold text-sm uppercase">Peso Actual</th>
+                                    <th class="p-4 font-bold text-sm uppercase">Stock Est.</th>
+                                    <th class="p-4 font-bold text-sm uppercase">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                    <td class="p-4 font-mono text-sm">ARD-001</td>
+                                    <td class="p-4 font-semibold">Cerveza Pack 6</td>
+                                    <td class="p-4 text-blue-600 font-bold">12.45 kg</td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold">24</span>
+                                            <span class="text-xs text-slate-400">unidades</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded text-xs font-bold uppercase">Conectado</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                    <td class="p-4 font-mono text-sm">ARD-002</td>
+                                    <td class="p-4 font-semibold">Refresco 2L</td>
+                                    <td class="p-4 text-blue-600 font-bold">4.20 kg</td>
+                                    <td class="p-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="font-bold text-red-500">2</span>
+                                            <span class="text-xs text-slate-400">unidades</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-green-100 dark:bg-green-900/40 text-green-700 dark:text-green-400 rounded text-xs font-bold uppercase">Conectado</span>
+                                    </td>
+                                </tr>
+                                <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                                    <td class="p-4 font-mono text-sm">ARD-003</td>
+                                    <td class="p-4 font-semibold">Agua 500ml</td>
+                                    <td class="p-4 text-slate-400 font-bold">-- kg</td>
+                                    <td class="p-4">
+                                        <span class="text-xs text-slate-400">Sin datos</span>
+                                    </td>
+                                    <td class="p-4">
+                                        <span class="px-2 py-1 bg-slate-100 dark:bg-slate-900 text-slate-500 rounded text-xs font-bold uppercase">Desconectado</span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                            <span class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-tight">Última Lectura Global</span>
+                            <div class="mt-4">
+                                <span id="iot-last-read" class="text-4xl font-black text-primary">21:37:45</span>
+                                <p class="text-xs text-slate-400 mt-1">Sincronizado con servidor central</p>
+                            </div>
+                        </div>
+                        <div class="bg-surface-light dark:bg-surface-dark p-6 rounded-xl border border-slate-200 dark:border-slate-700 flex flex-col justify-between">
+                            <span class="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-tight">Eficacia de Peso</span>
+                            <div class="mt-4 flex items-end gap-2">
+                                <span class="text-4xl font-black text-green-500">98.2%</span>
+                                <span class="material-icons text-green-500 mb-1">trending_up</span>
+                            </div>
+                            <p class="text-xs text-slate-400 mt-1">Margen de error +/- 50g</p>
+                        </div>
+                        <div class="sm:col-span-2 bg-slate-800 dark:bg-slate-900 text-white p-6 rounded-xl relative overflow-hidden">
+                            <div class="relative z-10">
+                                <h4 class="text-lg font-bold mb-2">Estado del Arduino Central</h4>
+                                <p class="text-slate-300 text-sm mb-4">Puerto COM3 - Baud: 9600. Recibiendo señales de 8 celdas de carga.</p>
+                                <div class="flex gap-2">
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">Uptime: 14h 22m</span>
+                                    <span class="px-3 py-1 bg-white/10 rounded-full text-xs border border-white/20">Temp: 34°C</span>
+                                </div>
+                            </div>
+                            <span class="material-icons absolute -right-4 -bottom-4 text-9xl text-white/5 rotate-12">memory</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer class="bg-surface-light dark:bg-surface-dark p-6 border-t border-slate-200 dark:border-slate-700 shadow-lg flex flex-wrap md:flex-nowrap gap-4 items-center justify-between">
+        <div class="flex gap-4 w-full md:w-auto">
+            <button onclick="window.iotCalibrar(this)" class="bg-accent-purple px-10 py-3 rounded font-bold text-slate-700 hover:brightness-95 transition-all shadow-sm flex items-center justify-center gap-2 flex-1 md:flex-none">
+                <span class="material-icons text-sm">refresh</span>
+                Calibrar Sensores
+            </button>
+            <button onclick="window.iotReporte()" class="bg-accent-purple px-10 py-3 rounded font-bold text-slate-700 hover:brightness-95 transition-all shadow-sm flex-1 md:flex-none text-center">
+                Reporte Histórico
+            </button>
+        </div>
+        <div class="flex items-center gap-8 w-full md:w-auto justify-between md:justify-end mt-4 md:mt-0">
+            <div class="text-right hidden sm:block">
+                <span class="text-slate-500 dark:text-slate-400 text-xs font-bold uppercase">Capacidad Total Utilizada</span>
+                <div class="flex items-center gap-3">
+                    <div class="w-48 h-3 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+                        <div class="h-full bg-primary w-3/4"></div>
+                    </div>
+                    <span class="font-bold">75%</span>
+                </div>
+            </div>
+            <button onclick="window.iotActualizar(this)" class="bg-primary px-12 py-3 rounded font-bold text-slate-900 hover:brightness-105 transition-all shadow-md uppercase tracking-wider w-full sm:w-auto text-center">
+                Actualizar Todo
+            </button>
+        </div>
+    </footer>
+
+    <img src="dummy" onerror="
+        (function() {
+            // Reloj en tiempo real
+            setInterval(() => {
+                let d = new Date();
+                let dateEl = document.getElementById('iot-date');
+                let timeEl = document.getElementById('iot-time');
+                if(dateEl) dateEl.innerText = d.toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+                if(timeEl) timeEl.innerText = d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            }, 1000);
+
+            // Acción: Generar Pedido
+            window.iotGenerarPedido = function(btn) {
+                alert('Pedido automático generado: Fanta Naranja 600ml. Notificación enviada al proveedor.');
+                btn.innerText = 'Pedido Enviado';
+                btn.classList.remove('bg-primary', 'text-slate-900', 'hover:brightness-105');
+                btn.classList.add('bg-green-500', 'text-white', 'cursor-not-allowed');
+                btn.onclick = null; // Desactiva el botón
+            };
+
+            // Acción: Ver Cámaras
+            window.iotVerCamaras = function() {
+                alert('Conectando con el sistema CCTV... \n\n(Simulación: Abriendo pop-up con feed de la cámara de Bodega Principal).');
+            };
+
+            // Acción: Calibrar Sensores
+            window.iotCalibrar = function(btn) {
+                let textOriginal = btn.innerHTML;
+                btn.innerHTML = '<span class=\'material-icons text-sm animate-spin\'>refresh</span> Calibrando...';
+                btn.disabled = true;
+                
+                setTimeout(() => {
+                    alert('Calibración finalizada. Tara ajustada a 0 en todos los sensores activos (ARD-001, ARD-002).');
+                    btn.innerHTML = textOriginal;
+                    btn.disabled = false;
+                }, 1500);
+            };
+
+            // Acción: Reporte Histórico
+            window.iotReporte = function() {
+                alert('Generando archivo PDF con el histórico de alertas de inventario y lecturas de peso de los últimos 30 días...\n\nDescarga iniciada.');
+            };
+
+            // Acción: Actualizar Todo (Sincronización manual)
+            window.iotActualizar = function(btn) {
+                let textOriginal = btn.innerText;
+                btn.innerText = 'Sincronizando...';
+                btn.disabled = true;
+
+                setTimeout(() => {
+                    let d = new Date();
+                    let lr = document.getElementById('iot-last-read');
+                    if(lr) lr.innerText = d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+                    
+                    alert('Lecturas de peso y estado de sensores sincronizados correctamente con el Arduino.');
+                    btn.innerText = textOriginal;
+                    btn.disabled = false;
+                }, 1000);
+            };
+
+            // Iniciar timestamp de Última Lectura Global con la hora actual al cargar
+            let initD = new Date();
+            let initLr = document.getElementById('iot-last-read');
+            if(initLr) initLr.innerText = initD.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+
+        })();
+        this.remove();
+    " style="display:none;">
+</main>
