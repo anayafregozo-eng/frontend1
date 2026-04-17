@@ -1,0 +1,221 @@
+<main class="flex-1 flex flex-col min-w-0">
+    <header class="bg-slate-700 dark:bg-slate-800 p-8 shadow-md">
+        <div class="flex justify-between items-center max-w-7xl mx-auto w-full">
+            <div class="text-primary">
+                <p id="current-date" class="text-sm font-medium opacity-80 mb-1 capitalize">Cargando fecha...</p>
+                <h1 class="text-5xl font-black tracking-tighter">VENTA</h1>
+            </div>
+            <div class="text-right">
+                <span id="current-time" class="text-4xl font-mono font-bold text-white tracking-widest">--:--</span>
+                <div class="mt-2 flex gap-2 justify-end">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">Caja Abierta</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex-1 p-8 overflow-y-auto custom-scrollbar">
+        <div class="max-w-7xl mx-auto space-y-8">
+
+            <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 flex flex-wrap gap-6 items-end">
+                <div class="flex-1 min-w-[300px] space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Seleccionar Producto</label>
+                    <div class="relative">
+                        <span class="material-icons-round absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</span>
+                        
+                        <select id="productoSelect" class="w-full pl-10 pr-10 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary transition-all appearance-none cursor-pointer">
+                            <option value="">Escriba para buscar o seleccione...</option>
+                            <option value="750123456" data-nombre="Coca Cola 600ml" data-precio="19" data-stock="45">Coca Cola 600ml - Stock: 45</option>
+                            <option value="750987654" data-nombre="Fanta Naranja 600ml" data-precio="19" data-stock="2">Fanta Naranja 600ml - Stock: 2 (Bajo)</option>
+                            <option value="750555111" data-nombre="Agua Mineral 1L" data-precio="18" data-stock="8">Agua Mineral 1L - Stock: 8 (Alerta)</option>
+                            <option value="750888222" data-nombre="Papas Sabritas" data-precio="16" data-stock="15">Papas Sabritas - Stock: 15</option>
+                        </select>
+                        
+                        <span class="material-icons-round absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_more</span>
+                    </div>
+                </div>
+
+                <div class="w-32 space-y-2">
+                    <label class="block text-sm font-semibold text-slate-700 dark:text-slate-300">Cantidad</label>
+                    <input id="cantidadInput" class="w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border-slate-200 dark:border-slate-700 rounded-lg focus:ring-primary focus:border-primary" min="1" type="number" value="1"/>
+                </div>
+
+                <div class="flex gap-3">
+                    <button id="btnAgregar" class="bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-6 py-3 rounded-lg font-bold hover:bg-indigo-200 dark:hover:bg-indigo-900/50 transition-all flex items-center gap-2">
+                        <span class="material-icons-round">add</span> Agregar
+                    </button>
+                    <button id="btnQuitar" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-6 py-3 rounded-lg font-bold hover:bg-slate-200 dark:hover:bg-slate-600 transition-all flex items-center gap-2">
+                        <span class="material-icons-round">remove_circle_outline</span> Quitar
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700 overflow-hidden">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-50 dark:bg-slate-900/50 border-b border-slate-200 dark:border-slate-700">
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider">Código</th>
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider">Producto</th>
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider">Cantidad</th>
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider text-right">Precio Unitario</th>
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider text-right">Importe</th>
+                            <th class="px-6 py-4 font-bold text-slate-700 dark:text-slate-200 uppercase text-xs tracking-wider text-center">Alertas</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaCarrito" class="divide-y divide-slate-100 dark:divide-slate-700"></tbody>
+                </table>
+            </div>
+
+            <div class="flex justify-between items-center bg-slate-100 dark:bg-slate-900 p-8 rounded-xl border-t-4 border-primary">
+                <button id="btnCancelar" class="flex items-center gap-2 px-8 py-4 border-2 border-slate-300 dark:border-slate-700 text-slate-600 dark:text-slate-400 rounded-lg font-bold hover:bg-slate-200 dark:hover:bg-slate-800 transition-all">
+                    <span class="material-icons-round">cancel</span> CANCELAR
+                </button>
+
+                <div class="flex items-center gap-12">
+                    <div class="text-right">
+                        <span class="text-slate-500 dark:text-slate-400 font-bold uppercase tracking-widest text-sm block">Total a Pagar</span>
+                        <div class="flex items-center justify-end gap-3 mt-1">
+                            <span class="text-3xl font-light text-slate-400">$</span>
+                            <span id="totalPagar" class="text-6xl font-black text-slate-900 dark:text-white tracking-tighter">0.00</span>
+                        </div>
+                    </div>
+                    <button id="btnCobrar" class="bg-primary hover:bg-primary-dark text-slate-900 px-12 py-6 rounded-xl font-black text-2xl shadow-xl shadow-primary/20 transform transition-transform active:scale-95 flex items-center gap-3">
+                        <span class="material-icons-round text-3xl">payments</span>
+                        COBRAR
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <img src="dummy" onerror="
+        (function() {
+            // Reloj en tiempo real
+            setInterval(() => {
+                let d = new Date();
+                let dateEl = document.getElementById('current-date');
+                let timeEl = document.getElementById('current-time');
+                if(dateEl) dateEl.innerText = d.toLocaleDateString('es-ES', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+                if(timeEl) timeEl.innerText = d.toLocaleTimeString('es-ES', {hour:'2-digit', minute:'2-digit'});
+            }, 1000);
+
+            // Variables de estado
+            let carrito = new Map();
+            let selectElem = document.getElementById('productoSelect');
+            let cantElem = document.getElementById('cantidadInput');
+            let tbody = document.getElementById('tablaCarrito');
+            let totalElem = document.getElementById('totalPagar');
+
+            function formatearMoneda(valor) {
+                return Number(valor).toFixed(2);
+            }
+
+            // Renderizar la tabla del carrito
+            function actualizarVista() {
+                tbody.innerHTML = '';
+                let total = 0;
+
+                for (let [codigo, item] of carrito) {
+                    total += (item.precio * item.cantidad);
+                    
+                    // Lógica de colores para alertas de stock
+                    let colorAlerta = 'bg-green-500';
+                    let tituloAlerta = 'Stock suficiente';
+                    if (item.stock <= 3) {
+                        colorAlerta = 'bg-red-500 animate-pulse';
+                        tituloAlerta = 'Stock crítico';
+                    } else if (item.stock <= 10) {
+                        colorAlerta = 'bg-orange-400';
+                        tituloAlerta = 'Stock bajo';
+                    }
+
+                    let tr = document.createElement('tr');
+                    tr.className = 'hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors';
+                    tr.innerHTML = `
+                        <td class='px-6 py-4 font-mono text-sm opacity-80'>${codigo}</td>
+                        <td class='px-6 py-4 font-bold'>${item.nombre}</td>
+                        <td class='px-6 py-4 font-medium'>${item.cantidad}</td>
+                        <td class='px-6 py-4 text-right'>$${formatearMoneda(item.precio)}</td>
+                        <td class='px-6 py-4 text-right font-black'>$${formatearMoneda(item.precio * item.cantidad)}</td>
+                        <td class='px-6 py-4 text-center'>
+                            <span class='w-3 h-3 rounded-full inline-block ${colorAlerta}' title='${tituloAlerta}'></span>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                }
+
+                totalElem.innerText = formatearMoneda(total);
+            }
+
+            // Agregar producto
+            document.getElementById('btnAgregar').onclick = function() {
+                let codigo = selectElem.value;
+                if (!codigo) return alert('Por favor, selecciona un producto de la lista.');
+                
+                let opt = selectElem.options[selectElem.selectedIndex];
+                let qty = parseInt(cantElem.value) || 1;
+                if (qty < 1) qty = 1;
+
+                let nombre = opt.getAttribute('data-nombre');
+                let precio = parseFloat(opt.getAttribute('data-precio'));
+                let stock = parseInt(opt.getAttribute('data-stock'));
+
+                let productoActual = carrito.get(codigo) || { nombre, precio, stock, cantidad: 0 };
+                productoActual.cantidad += qty;
+                
+                carrito.set(codigo, productoActual);
+                cantElem.value = 1; // Reseteamos el input
+                actualizarVista();
+            };
+
+            // Quitar producto
+            document.getElementById('btnQuitar').onclick = function() {
+                let codigo = selectElem.value;
+                if (!codigo) return alert('Selecciona qué producto deseas quitar de la lista.');
+                
+                let qty = parseInt(cantElem.value) || 1;
+                if (qty < 1) qty = 1;
+
+                let productoActual = carrito.get(codigo);
+                if (!productoActual) return; // No está en el carrito
+
+                productoActual.cantidad -= qty;
+                
+                if (productoActual.cantidad <= 0) {
+                    carrito.delete(codigo);
+                } else {
+                    carrito.set(codigo, productoActual);
+                }
+                
+                cantElem.value = 1;
+                actualizarVista();
+            };
+
+            // Cancelar Venta
+            document.getElementById('btnCancelar').onclick = function() {
+                if (carrito.size === 0) return;
+                if (confirm('¿Estás seguro de que deseas vaciar el carrito y cancelar la venta?')) {
+                    carrito.clear();
+                    selectElem.value = '';
+                    cantElem.value = 1;
+                    actualizarVista();
+                }
+            };
+
+            // Cobrar Venta
+            document.getElementById('btnCobrar').onclick = function() {
+                if (carrito.size === 0) return alert('El carrito está vacío. Agrega productos antes de cobrar.');
+                alert(`¡Cobro realizado con éxito! Total: $${totalElem.innerText} `);
+                carrito.clear();
+                selectElem.value = '';
+                cantElem.value = 1;
+                actualizarVista();
+            };
+
+            // Iniciar vista limpia
+            actualizarVista();
+        })();
+        this.remove();
+    " style="display:none;">
+</main>

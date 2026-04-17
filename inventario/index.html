@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Smart Inventory</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#FDE047",
+            "background-light": "#F8FAFC",
+            "background-dark": "#0F172A",
+            "sidebar-light": "#D1D5DB",
+            "sidebar-dark": "#1E293B",
+          },
+          fontFamily: { sans: ["Inter", "sans-serif"] },
+          borderRadius: { DEFAULT: "0.75rem" },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    body { font-family: Inter, sans-serif; }
+    .custom-scrollbar::-webkit-scrollbar { width: 8px; height: 8px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 8px; }
+    .dark .custom-scrollbar::-webkit-scrollbar-thumb { background: #475569; }
+
+    .nav-active { background: rgba(253, 224, 71, .25); border-left: 4px solid #FDE047; }
+
+    .chatbot-toggle {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #fde047;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+      z-index: 9999;
+    }
+
+    .chatbot-window {
+      position: fixed;
+      bottom: 90px;
+      right: 20px;
+      width: 340px;
+      height: 500px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      z-index: 9999;
+      border: 1px solid #e5e7eb;
+    }
+
+    .dark .chatbot-window {
+      background: #0f172a;
+      border: 1px solid #334155;
+    }
+
+    .chatbot-header {
+      background: #1f2937;
+      color: white;
+      padding: 14px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chatbot-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .chatbot-header p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #d1d5db;
+    }
+
+    .chatbot-close {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 18px;
+      cursor: pointer;
+    }
+
+    .chatbot-messages {
+      flex: 1;
+      padding: 15px;
+      overflow-y: auto;
+      background: #f9fafb;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .dark .chatbot-messages {
+      background: #111827;
+    }
+
+    .user-message,
+    .bot-message {
+      max-width: 80%;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background: #fde047;
+      color: #111827;
+    }
+
+    .bot-message {
+      align-self: flex-start;
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    .dark .bot-message {
+      background: #334155;
+      color: #f8fafc;
+    }
+
+    .chatbot-input-area {
+      display: flex;
+      gap: 8px;
+      padding: 12px;
+      border-top: 1px solid #e5e7eb;
+      background: white;
+    }
+
+    .dark .chatbot-input-area {
+      background: #0f172a;
+      border-top: 1px solid #334155;
+    }
+
+    .chatbot-input-area input {
+      flex: 1;
+      border: 1px solid #d1d5db;
+      border-radius: 10px;
+      padding: 10px;
+      outline: none;
+      font-size: 14px;
+      background: white;
+      color: #111827;
+    }
+
+    .dark .chatbot-input-area input {
+      background: #1e293b;
+      color: #f8fafc;
+      border: 1px solid #475569;
+    }
+
+    .chatbot-input-area button {
+      border: none;
+      background: #fde047;
+      color: #111827;
+      border-radius: 10px;
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .chatbot-input-area button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
+  <div class="flex min-h-screen">
+    <aside id="sidebar" class="w-64 bg-sidebar-light dark:bg-sidebar-dark border-r border-slate-300 dark:border-slate-800 hidden md:flex flex-col">
+      <div class="p-7 border-b border-slate-300 dark:border-slate-800 flex flex-col items-center">
+        <div class="w-16 h-16 rounded-2xl bg-slate-300 dark:bg-slate-700 flex items-center justify-center mb-3 border border-slate-400 dark:border-slate-600">
+          <span class="material-icons-round text-4xl text-slate-700 dark:text-slate-200">inventory_2</span>
+        </div>
+        <div class="font-bold">Admin</div>
+        <div class="text-xs text-slate-600 dark:text-slate-300 uppercase tracking-widest">Smart Inventory</div>
+      </div>
+
+      <nav id="nav" class="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="dashboard">
+          <span class="material-icons-round">dashboard</span>
+          <span>Dashboard</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="venta">
+          <span class="material-icons-round">shopping_cart</span>
+          <span>Venta</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="productos">
+          <span class="material-icons-round">inventory_2</span>
+          <span>Productos</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="proveedores">
+          <span class="material-icons-round">local_shipping</span>
+          <span>Proveedores</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="usuarios">
+          <span class="material-icons-round">group</span>
+          <span>Usuarios</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="finanzas">
+          <span class="material-icons-round">payments</span>
+          <span>Finanzas</span>
+        </button>
+
+        <button class="nav-btn w-full text-left px-4 py-3 rounded-xl hover:bg-slate-300 dark:hover:bg-slate-800 transition flex items-center gap-3" data-route="alertas">
+          <span class="material-icons-round">notifications_active</span>
+          <span>Alertas & IoT</span>
+        </button>
+      </nav>
+
+      <div class="p-4 border-t border-slate-300 dark:border-slate-800 space-y-2">
+        <button id="btnLogout" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-red-600 text-white font-semibold hover:brightness-110 transition">
+          <span class="material-icons-round">logout</span>
+          <span>Salir</span>
+        </button>
+      </div>
+    </aside>
+
+    <main class="flex-1 min-w-0 flex flex-col">
+      <header id="topbar" class="p-4 md:p-5 border-b border-slate-200 dark:border-slate-800 hidden">
+        <div class="flex items-center justify-between">
+          <div>
+            <div class="font-bold" id="pageTitle">Dashboard</div>
+            <div class="text-xs text-slate-500 dark:text-slate-400" id="pageSub">Panel principal</div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="p-2 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-800" id="toggleThemeTop" title="Tema">
+              <span class="material-icons-round">contrast</span>
+            </button>
+            <button id="btnLogoutTop" class="px-3 py-2 rounded-lg bg-red-600 text-white font-semibold hover:brightness-110 transition flex items-center gap-2">
+              <span class="material-icons-round text-base">logout</span>
+              <span class="text-sm">Salir</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <section id="content" class="flex-1 overflow-auto custom-scrollbar">
+        <div class="p-8 text-slate-500">Cargando...</div>
+      </section>
+    </main>
+  </div>
+
+  <div id="chatbot-toggle" class="chatbot-toggle hidden" onclick="toggleChatbot()">
+    💬
+  </div>
+
+  <div id="chatbot-window" class="chatbot-window hidden">
+    <div class="chatbot-header">
+      <div>
+        <h3>Asistente Virtual</h3>
+        <p>¿En qué puedo ayudarte?</p>
+      </div>
+      <button class="chatbot-close" onclick="toggleChatbot()">✕</button>
+    </div>
+
+    <div id="chatbot-messages" class="chatbot-messages">
+      <div class="bot-message">
+        Hola, soy tu asistente virtual. ¿Qué necesitas?
+      </div>
+    </div>
+
+    <div class="chatbot-input-area">
+      <input
+        type="text"
+        id="chatbot-input"
+        placeholder="Escribe tu mensaje..."
+        onkeypress="handleChatbotKey(event)"
+      />
+      <button onclick="sendMessage()">Enviar</button>
+    </div>
+  </div>
+
+  <script>
+    const content = document.getElementById("content");
+    const pageTitle = document.getElementById("pageTitle");
+    const pageSub = document.getElementById("pageSub");
+    const sidebar = document.getElementById("sidebar");
+    const topbar = document.getElementById("topbar");
+    const btnLogout = document.getElementById("btnLogout");
+    const btnLogoutTop = document.getElementById("btnLogoutTop");
+    const navBtns = Array.from(document.querySelectorAll(".nav-btn"));
+
+    const ROUTES = {
+      login:       { file: "iniciar.module.html",    title: "Iniciar sesión", sub: "Acceso al sistema" },
+      dashboard:   { file: "dash.module.html",       title: "Dashboard",      sub: "Panel principal" },
+      venta:       { file: "venta.module.html",      title: "Venta",          sub: "Módulo de ventas" },
+      productos:   { file: "productos.module.html",  title: "Productos",      sub: "Gestión de inventario" },
+      proveedores: { file: "proveedor.module.html",  title: "Proveedores",    sub: "Gestión de proveedores" },
+      usuarios:    { file: "usuarios.module.html",   title: "Usuarios",       sub: "Gestión de usuarios" },
+      finanzas:    { file: "finanzas.module.html",   title: "Finanzas",       sub: "Resumen financiero" },
+      alertas:     { file: "alertasiot.module.html", title: "Alertas & IoT",  sub: "Alertas del sistema" },
+    };
+
+    function toggleTheme() {
+      document.documentElement.classList.toggle("dark");
+      localStorage.setItem("theme", document.documentElement.classList.contains("dark") ? "dark" : "light");
+    }
+
+    document.getElementById("toggleThemeTop").addEventListener("click", toggleTheme);
+
+    (function initTheme() {
+      const saved = localStorage.getItem("theme");
+      if (saved === "dark") document.documentElement.classList.add("dark");
+    })();
+
+    const AUTH_KEY = "smartinv_logged_in";
+
+    function isLoggedIn() {
+      return localStorage.getItem(AUTH_KEY) === "1";
+    }
+
+    function setLoggedIn(v) {
+      localStorage.setItem(AUTH_KEY, v ? "1" : "0");
+    }
+
+    function setActive(route) {
+      navBtns.forEach(b => {
+        const active = b.dataset.route === route;
+        b.classList.toggle("nav-active", active);
+        b.classList.toggle("font-bold", active);
+      });
+    }
+
+    function applyShellFor(route) {
+      const logged = isLoggedIn();
+      const isLogin = route === "login";
+      const chatbotToggle = document.getElementById("chatbot-toggle");
+      const chatbotWindow = document.getElementById("chatbot-window");
+
+      if (isLogin || !logged) {
+        sidebar.classList.add("hidden");
+        topbar.classList.add("hidden");
+        document.body.classList.add("overflow-hidden");
+
+        if (chatbotToggle) chatbotToggle.classList.add("hidden");
+        if (chatbotWindow) chatbotWindow.classList.add("hidden");
+      } else {
+        sidebar.classList.remove("hidden");
+        topbar.classList.remove("hidden");
+        document.body.classList.remove("overflow-hidden");
+
+        if (chatbotToggle) chatbotToggle.classList.remove("hidden");
+      }
+    }
+
+    async function load(route) {
+      const cfg = ROUTES[route] || ROUTES.login;
+      applyShellFor(route);
+
+      if (route !== "login") {
+        pageTitle.textContent = cfg.title;
+        pageSub.textContent = cfg.sub;
+        setActive(route);
+      }
+
+      if (route === "login") {
+        content.className = "flex-1 overflow-auto custom-scrollbar flex items-center justify-center p-4 md:p-10";
+      } else {
+        content.className = "flex-1 overflow-auto custom-scrollbar";
+      }
+
+      content.innerHTML = `<div class="p-8 text-slate-500">Cargando...</div>`;
+
+      try {
+        const res = await fetch(cfg.file, { cache: "no-store" });
+        if (!res.ok) throw new Error(`No pude cargar ${cfg.file} (HTTP ${res.status})`);
+
+        const htmlText = await res.text();
+        content.innerHTML = htmlText;
+
+        if (route === "venta") initVenta();
+        if (route === "productos") initProductos();
+        if (route === "login") wireLoginForm();
+      } catch (err) {
+        content.innerHTML = `
+          <div class="w-full max-w-xl p-8">
+            <div class="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-6">
+              <div class="font-bold text-red-600 mb-2">Error al cargar</div>
+              <div class="text-slate-600 dark:text-slate-300 text-sm">${err.message}</div>
+              <div class="mt-4 text-xs text-slate-500">
+                Asegúrate de que <b>${cfg.file}</b> esté en la misma carpeta que <b>index.html</b>.
+              </div>
+            </div>
+          </div>`;
+      }
+    }
+
+    function wireLoginForm() {
+      const form = content.querySelector("form");
+      if (!form) return;
+
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const user = content.querySelector("#identity")?.value?.trim() || "";
+        const pass = content.querySelector("#password")?.value?.trim() || "";
+
+        if (!user || !pass) {
+          content.querySelector("#loginError")?.classList.remove("hidden");
+          return;
+        }
+
+        setLoggedIn(true);
+        location.hash = "#dashboard";
+        load("dashboard");
+      });
+
+      ["#identity", "#password"].forEach(sel => {
+        const el = content.querySelector(sel);
+        if (el) {
+          el.addEventListener("input", () => {
+            content.querySelector("#loginError")?.classList.add("hidden");
+          });
+        }
+      });
+    }
+
+    function logout() {
+      setLoggedIn(false);
+      location.hash = "#login";
+      load("login");
+    }
+
+    btnLogout.addEventListener("click", logout);
+    btnLogoutTop.addEventListener("click", logout);
+
+    navBtns.forEach(btn => {
+      btn.addEventListener("click", () => {
+        location.hash = "#" + btn.dataset.route;
+      });
+    });
+
+    function routeFromHash() {
+      let route = (location.hash || "#login").replace("#", "");
+
+      if (!isLoggedIn()) route = "login";
+      if (isLoggedIn() && route === "login") route = "dashboard";
+      if (!ROUTES[route]) route = isLoggedIn() ? "dashboard" : "login";
+
+      load(route);
+    }
+
+    window.addEventListener("hashchange", routeFromHash);
+
+    (function init() {
+      if (!isLoggedIn()) location.hash = "#login";
+      else if (!location.hash) location.hash = "#dashboard";
+      routeFromHash();
+    })();
+
+    function toggleChatbot() {
+      const chatbotWindow = document.getElementById("chatbot-window");
+      chatbotWindow.classList.toggle("hidden");
+    }
+
+    function handleChatbotKey(event) {
+      if (event.key === "Enter") sendMessage();
+    }
+
+    function addMessage(text, sender) {
+      const messagesContainer = document.getElementById("chatbot-messages");
+      const messageDiv = document.createElement("div");
+
+      messageDiv.className = sender === "user" ? "user-message" : "bot-message";
+      messageDiv.textContent = text;
+
+      messagesContainer.appendChild(messageDiv);
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    const MODULE_ALIASES = {
+      dashboard: ["dashboard", "inicio", "panel"],
+      venta: ["venta", "ventas"],
+      productos: ["producto", "productos", "inventario", "almacen", "almacén"],
+      proveedores: ["proveedor", "proveedores"],
+      usuarios: ["usuario", "usuarios"],
+      finanzas: ["finanza", "finanzas"],
+      alertas: ["alerta", "alertas", "iot", "notificaciones", "avisos"]
+    };
+
+    function obtenerInventarioDesdeTabla() {
+      const tbody = document.getElementById("productosBody");
+      if (!tbody) return [];
+
+      const filas = Array.from(tbody.querySelectorAll("tr"));
+      return filas.map(fila => {
+        const style = window.getComputedStyle(fila);
+        const estaOculta = fila.style.display === "none" || style.display === "none";
+
+        return {
+          codigo: fila.dataset.codigo?.trim() || "",
+          nombre: fila.dataset.nombre?.trim() || "",
+          proveedor: fila.dataset.proveedor?.trim() || "",
+          tipo: fila.dataset.tipo?.trim() || "",
+          stock: Number(fila.dataset.stock || 0),
+          precio: Number(fila.dataset.precio || 0),
+          visible: !estaOculta
+        };
+      }).filter(p => p.nombre);
+    }
+
+    function getChatbotApiUrl() {
+      const host = window.location.hostname;
+
+      if (host === "127.0.0.1" || host === "localhost") {
+        return "http://127.0.0.1:5000/chat";
+      }
+
+      return "https://backend-production-b605.up.railway.app/chat";
+    }
+
+    function detectarModuloDesdeTexto(texto = "") {
+      const normalizado = texto.toLowerCase();
+      for (const [route, aliases] of Object.entries(MODULE_ALIASES)) {
+        if (aliases.some(alias => normalizado.includes(alias))) {
+          return route;
+        }
+      }
+      return null;
+    }
+
+    function routeFromHashName() {
+      const hash = (window.location.hash || "").replace("#", "").trim().toLowerCase();
+      return hash || "dashboard";
+    }
+
+    function ejecutarAccionChatbot(data, mensajeOriginal) {
+      const intent = data?.intencion || "";
+      const route = detectarModuloDesdeTexto(mensajeOriginal) || detectarModuloDesdeTexto(data?.respuesta || "");
+      const rutaActual = routeFromHashName();
+
+      if (route && route !== rutaActual) {
+        if (intent === "navegacion_modulos" || intent === "desconocido") {
+          location.hash = `#${route}`;
+          return true;
+        }
+      }
+
+      if (["consultar_inventario", "buscar_producto", "info_producto", "actualizar_stock", "agregar_producto", "eliminar_producto"].includes(intent)) {
+        if (rutaActual !== "productos") {
+          addMessage("Te llevo al módulo de productos para que lo revises mejor.", "bot");
+          location.hash = "#productos";
+          return true;
+        }
+      }
+
+      if (intent === "alertas_stock" && rutaActual !== "alertas") {
+        addMessage("Te llevo al módulo de alertas para revisarlo.", "bot");
+        location.hash = "#alertas";
+        return true;
+      }
+
+      return false;
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("chatbot-input");
+      const mensaje = input.value.trim();
+
+      if (!mensaje) return;
+
+      addMessage(mensaje, "user");
+      input.value = "";
+
+      const API_URL = getChatbotApiUrl();
+      const rutaActual = routeFromHashName();
+      let inventario = [];
+
+      try {
+        inventario = obtenerInventarioDesdeTabla();
+      } catch (error) {
+        console.error("No se pudo leer el inventario desde la tabla:", error);
+      }
+
+      console.log("Ruta actual:", rutaActual);
+      console.log("Inventario leído:", inventario);
+      console.log("Cantidad de productos:", inventario.length);
+
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            mensaje,
+            inventario,
+            rutaActual
+          })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(data?.respuesta || "Error en la respuesta del servidor");
+        }
+
+        addMessage(data.respuesta || "No recibí respuesta del chatbot.", "bot");
+
+        if (typeof ejecutarAccionChatbot === "function") {
+          ejecutarAccionChatbot(data, mensaje);
+        }
+      } catch (error) {
+        console.error("Error al conectar con el chatbot:", error);
+        addMessage("No se pudo conectar con el chatbot.", "bot");
+      }
+    }
+
+    function initVenta() {
+      const productoSelect = document.getElementById("productoSelect");
+      const cantidadInput = document.getElementById("cantidadInput");
+      const tablaCarrito = document.getElementById("tablaCarrito");
+      const totalPagar = document.getElementById("totalPagar");
+
+      const btnAgregar = document.getElementById("btnAgregar");
+      const btnQuitar = document.getElementById("btnQuitar");
+      const btnCancelar = document.getElementById("btnCancelar");
+      const btnCobrar = document.getElementById("btnCobrar");
+
+      if (!productoSelect || !btnAgregar) return;
+
+      const carrito = new Map();
+
+      function money(n) {
+        return Number(n).toFixed(2);
+      }
+
+      function getSeleccion() {
+        const opt = productoSelect.selectedOptions[0];
+        if (!opt || !productoSelect.value) return null;
+
+        return {
+          codigo: productoSelect.value,
+          nombre: opt.dataset.nombre,
+          precio: Number(opt.dataset.precio),
+          stock: Number(opt.dataset.stock)
+        };
+      }
+
+      function render() {
+        tablaCarrito.innerHTML = "";
+        let total = 0;
+
+        for (const item of carrito.values()) {
+          total += item.precio * item.cantidad;
+
+          const alerta =
+            item.stock <= 3 ? "bg-red-500 animate-pulse" :
+            item.stock <= 10 ? "bg-orange-400" :
+            "bg-green-500";
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td class="px-6 py-4 font-mono">${item.codigo}</td>
+            <td class="px-6 py-4 font-semibold">${item.nombre}</td>
+            <td class="px-6 py-4">${item.cantidad}</td>
+            <td class="px-6 py-4 text-right">$${money(item.precio)}</td>
+            <td class="px-6 py-4 text-right font-bold">$${money(item.precio * item.cantidad)}</td>
+            <td class="px-6 py-4 text-center">
+              <span class="w-3 h-3 rounded-full inline-block ${alerta}"></span>
+            </td>`;
+          tablaCarrito.appendChild(tr);
+        }
+
+        totalPagar.textContent = money(total);
+      }
+
+      btnAgregar.onclick = () => {
+        const sel = getSeleccion();
+        if (!sel) return alert("Selecciona un producto");
+
+        const q = Math.max(1, Math.floor(Number(cantidadInput.value || 1)));
+        const item = carrito.get(sel.codigo) || { ...sel, cantidad: 0 };
+        item.cantidad += q;
+        carrito.set(sel.codigo, item);
+
+        render();
+      };
+
+      btnQuitar.onclick = () => {
+        const sel = getSeleccion();
+        if (!sel) return alert("Selecciona el producto");
+
+        const q = Math.max(1, Math.floor(Number(cantidadInput.value || 1)));
+        const item = carrito.get(sel.codigo);
+        if (!item) return;
+
+        item.cantidad -= q;
+        if (item.cantidad <= 0) carrito.delete(sel.codigo);
+
+        render();
+      };
+
+      btnCancelar.onclick = () => {
+        if (!confirm("¿Cancelar venta?")) return;
+        carrito.clear();
+        render();
+      };
+
+      btnCobrar.onclick = () => {
+        if (carrito.size === 0) return alert("No hay productos");
+        alert("Venta realizada correctamente 💳");
+        carrito.clear();
+        render();
+      };
+
+      render();
+    }
+
+    function initProductos() {
+      const tbody = document.getElementById("productosBody");
+
+      const buscarInput = document.getElementById("buscarInput");
+      const tipoSelect = document.getElementById("tipoSelect");
+      const stockSelect = document.getElementById("stockSelect");
+      const btnFiltrar = document.getElementById("btnFiltrar");
+
+      const btnAdd = document.getElementById("btnAddProd");
+      const btnEdit = document.getElementById("btnEditProd");
+      const btnDel = document.getElementById("btnDelProd");
+
+      const modalAdd = document.getElementById("modalAddProd");
+      const btnCloseAdd = document.getElementById("btnCloseModalAdd");
+      const btnCancelAdd = document.getElementById("btnCancelModalAdd");
+      const btnSaveAdd = document.getElementById("btnSaveModalAdd");
+
+      const inpCodigo = document.getElementById("inpCodigo");
+      const inpNombre = document.getElementById("inpNombre");
+      const inpProveedor = document.getElementById("inpProveedor");
+      const inpTipo = document.getElementById("inpTipo");
+      const inpStock = document.getElementById("inpStock");
+      const inpPrecio = document.getElementById("inpPrecio");
+      const errBox = document.getElementById("addProdError");
+
+      if (!tbody || !btnAdd) return;
+
+      function parseStock(text) {
+        const n = Number(String(text).replace(/[^\d.]/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function parsePrecio(text) {
+        const n = Number(String(text).replace(/[^0-9.]/g, ""));
+        return Number.isFinite(n) ? n : 0;
+      }
+
+      function statusByStock(stock) {
+        if (stock <= 0) return { color: "text-red-500", title: "Agotado" };
+        if (stock <= 10) return { color: "text-yellow-500", title: "Stock Bajo" };
+        return { color: "text-green-500", title: "En Stock" };
+      }
+
+      function stockEstado(stock) {
+        if (stock <= 0) return "Agotado";
+        if (stock <= 10) return "Bajo";
+        return "Disponible";
+      }
+
+      let selectedRow = null;
+
+      function clearSelection() {
+        if (selectedRow) {
+          selectedRow.classList.remove("ring-2", "ring-primary");
+          selectedRow = null;
+        }
+      }
+
+      function bindRowClicks() {
+        Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+          tr.addEventListener("click", () => {
+            clearSelection();
+            selectedRow = tr;
+            tr.classList.add("ring-2", "ring-primary");
+          });
+        });
+      }
+
+      bindRowClicks();
+
+      function applyFilters() {
+        const q = (buscarInput?.value || "").trim().toLowerCase();
+        const tipo = tipoSelect?.value || "Todos";
+        const st = stockSelect?.value || "Cualquiera";
+
+        Array.from(tbody.querySelectorAll("tr")).forEach(tr => {
+          const codigo = (tr.dataset.codigo || "").trim().toLowerCase();
+          const nombre = (tr.dataset.nombre || "").trim().toLowerCase();
+          const tipoFila = (tr.dataset.tipo || "").trim();
+          const stock = Number(tr.dataset.stock || 0);
+
+          const matchTipo = (tipo === "Todos") || (tipoFila === tipo);
+
+          const estado = stockEstado(stock);
+          const matchStock =
+            (st === "Cualquiera") ||
+            (st === "Disponible" && estado === "Disponible") ||
+            (st === "Bajo" && estado === "Bajo") ||
+            (st === "Agotado" && estado === "Agotado");
+
+          const matchQ = !q || codigo.includes(q) || nombre.includes(q);
+
+          const show = matchQ && matchTipo && matchStock;
+          tr.style.display = show ? "" : "none";
+
+          if (!show && selectedRow === tr) clearSelection();
+        });
+      }
+
+      if (buscarInput) buscarInput.addEventListener("input", applyFilters);
+      if (tipoSelect) tipoSelect.addEventListener("change", applyFilters);
+      if (stockSelect) stockSelect.addEventListener("change", applyFilters);
+      if (btnFiltrar) btnFiltrar.addEventListener("click", applyFilters);
+
+      function openAdd() {
+        errBox.classList.add("hidden");
+        errBox.textContent = "Completa todos los campos correctamente.";
+        inpCodigo.value = "";
+        inpNombre.value = "";
+        inpProveedor.value = "";
+        inpTipo.value = "Bebida";
+        inpStock.value = "0";
+        inpPrecio.value = "0";
+        modalAdd.classList.remove("hidden");
+        setTimeout(() => inpCodigo.focus(), 0);
+      }
+
+      function closeAdd() {
+        modalAdd.classList.add("hidden");
+      }
+
+      btnAdd.onclick = openAdd;
+      btnCloseAdd.onclick = closeAdd;
+      btnCancelAdd.onclick = closeAdd;
+
+      modalAdd.addEventListener("click", (e) => {
+        const backdrop = modalAdd.querySelector(".absolute.inset-0");
+        if (e.target === backdrop) closeAdd();
+      });
+
+      function codigoExiste(codigo) {
+        const codigos = Array.from(tbody.querySelectorAll("tr"))
+          .map(tr => (tr.dataset.codigo || "").trim().toLowerCase());
+        return codigos.includes(codigo.trim().toLowerCase());
+      }
+
+      btnSaveAdd.onclick = () => {
+        const codigo = (inpCodigo.value || "").trim();
+        const nombre = (inpNombre.value || "").trim();
+        const proveedor = (inpProveedor.value || "").trim();
+        const tipo = (inpTipo.value || "").trim();
+        const stock = Number(inpStock.value || 0);
+        const precio = Number(inpPrecio.value || 0);
+
+        if (!codigo || !nombre || !proveedor || !tipo || !Number.isFinite(stock) || !Number.isFinite(precio) || stock < 0 || precio < 0) {
+          errBox.classList.remove("hidden");
+          return;
+        }
+
+        if (codigoExiste(codigo)) {
+          errBox.textContent = "Ese código ya existe. Usa otro.";
+          errBox.classList.remove("hidden");
+          return;
+        }
+
+        const st = statusByStock(stock);
+
+        const tr = document.createElement("tr");
+        tr.className = "prod-row border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors cursor-pointer";
+        tr.dataset.codigo = codigo;
+        tr.dataset.nombre = nombre;
+        tr.dataset.proveedor = proveedor;
+        tr.dataset.tipo = tipo;
+        tr.dataset.stock = String(stock);
+        tr.dataset.precio = String(precio.toFixed(2));
+
+        tr.innerHTML = `
+          <td class="p-4">
+            <span class="material-icons-round ${st.color}" title="${st.title}">fiber_manual_record</span>
+          </td>
+          <td class="p-4 font-mono text-xs opacity-70">${codigo}</td>
+          <td class="p-4 font-medium">${nombre}</td>
+          <td class="p-4">${proveedor}</td>
+          <td class="p-4">${stock} unidades</td>
+          <td class="p-4 text-right font-bold">$${precio.toFixed(2)}</td>
+        `;
+
+        tbody.appendChild(tr);
+        bindRowClicks();
+        applyFilters();
+        closeAdd();
+      };
+
+      btnEdit.onclick = () => {
+        if (!selectedRow) return alert("Selecciona un producto de la tabla.");
+
+        const tds = selectedRow.querySelectorAll("td");
+        if (tds.length < 6) return;
+
+        const codigo = selectedRow.dataset.codigo || tds[1].textContent.trim();
+        const nombre = selectedRow.dataset.nombre || tds[2].textContent.trim();
+        const proveedor = selectedRow.dataset.proveedor || tds[3].textContent.trim();
+        const tipo = selectedRow.dataset.tipo || "Bebida";
+        const stock = Number(selectedRow.dataset.stock || parseStock(tds[4].textContent));
+        const precio = Number(selectedRow.dataset.precio || parsePrecio(tds[5].textContent));
+
+        const newNombre = prompt("Nombre:", nombre);
+        if (newNombre === null) return;
+
+        const newProveedor = prompt("Proveedor:", proveedor);
+        if (newProveedor === null) return;
+
+        const newTipo = prompt("Tipo:", tipo);
+        if (newTipo === null) return;
+
+        const newStock = prompt("Stock:", String(stock));
+        if (newStock === null) return;
+
+        const newPrecio = prompt("Precio:", String(precio));
+        if (newPrecio === null) return;
+
+        const s = Number(newStock);
+        const p = Number(newPrecio);
+
+        if (!newNombre.trim() || !newProveedor.trim() || !newTipo.trim() || !Number.isFinite(s) || !Number.isFinite(p) || s < 0 || p < 0) {
+          alert("Datos inválidos.");
+          return;
+        }
+
+        tds[1].textContent = codigo;
+        tds[2].textContent = newNombre.trim();
+        tds[3].textContent = newProveedor.trim();
+        tds[4].textContent = `${s} unidades`;
+        tds[5].textContent = `$${p.toFixed(2)}`;
+
+        selectedRow.dataset.codigo = codigo;
+        selectedRow.dataset.nombre = newNombre.trim();
+        selectedRow.dataset.proveedor = newProveedor.trim();
+        selectedRow.dataset.tipo = newTipo.trim();
+        selectedRow.dataset.stock = String(s);
+        selectedRow.dataset.precio = String(p.toFixed(2));
+
+        const st = statusByStock(s);
+        const icon = tds[0].querySelector("span.material-icons-round");
+        icon.className = `material-icons-round ${st.color}`;
+        icon.title = st.title;
+        icon.textContent = "fiber_manual_record";
+
+        applyFilters();
+      };
+
+      btnDel.onclick = () => {
+        if (!selectedRow) return alert("Selecciona un producto de la tabla.");
+
+        const codigo = selectedRow.dataset.codigo || selectedRow.querySelectorAll("td")[1]?.textContent?.trim() || "";
+        const ok = confirm(`¿Eliminar ${codigo}?`);
+        if (!ok) return;
+
+        selectedRow.remove();
+        selectedRow = null;
+        applyFilters();
+      };
+
+      applyFilters();
+    }
+  </script>
+</body>
+</html>
